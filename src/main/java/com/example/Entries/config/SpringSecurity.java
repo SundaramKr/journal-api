@@ -23,12 +23,15 @@ public class SpringSecurity {
     //** is called "wild card pattern"
     //endpoints starting with entry and user should be authenticated
     //rest all endpoints are permitted without needing any authentication
+
+    //the only difference b/w doc and this code is -> ".anyRequest().authenticated()" instead of ".anyRequest().permitAll()"
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(request -> request
                         //.requestMatchers("/public/**").permitAll()
                         .requestMatchers("/entry/**", "/user/**").authenticated()
-                        //.requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
