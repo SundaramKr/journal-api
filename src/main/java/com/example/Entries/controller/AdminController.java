@@ -27,6 +27,8 @@ public class AdminController {
         }
     }
 
+    //Create User using PublicUserController.
+    //Pass the userName as a PathVariable to give it the "ADMIN" role.
     @PostMapping("/make-admin/{userName}")
     public ResponseEntity<?> makeUserAdmin(@PathVariable String userName) {
         User user = userService.findByUserName(userName);
@@ -38,6 +40,16 @@ public class AdminController {
             user.setRoles(roles);
             userService.saveEntry(user);
             return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/get-user/{userName}")
+    public ResponseEntity<?> getByUsername(@PathVariable String userName) {
+        User user = userService.findByUserName(userName);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 }
