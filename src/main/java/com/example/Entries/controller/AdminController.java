@@ -6,9 +6,7 @@ import com.example.Entries.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +24,20 @@ public class AdminController {
             return new ResponseEntity<>(allUsers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("No entries found in the collection", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/make-admin/{userName}")
+    public ResponseEntity<?> makeUserAdmin(@PathVariable String userName) {
+        User user = userService.findByUserName(userName);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            List<String> roles = user.getRoles();
+            roles.add("ADMIN");
+            user.setRoles(roles);
+            userService.saveEntry(user);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 }
